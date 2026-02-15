@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jane Bloglife - Fashion Blog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Lato', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+    .hero-img {
+      background: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=80') center/cover no-repeat;
+    }
+    .score-gold { color: gold !important; }
+    .hidden-scroll { display: none; }
+    article { transition: opacity 0.3s ease; }
+    .tag-btn.active { background: #111; color: #fff; }
+    nav a { transition: opacity 0.2s; }
+    nav a:hover { opacity: 0.6; }
+    .like-btn:active { transform: scale(0.95); }
+    #search-bar::placeholder { color: #aaa; }
+    .sidebar-card { border-left: 3px solid #111; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- ===== TOP SOCIAL BAR ===== -->
+  <div class="bg-black text-white px-6 py-2 flex items-center justify-between">
+    <div class="flex gap-5 text-lg" id="social-links">
+      <a href="#" aria-label="Facebook" class="hover:text-gray-400 transition">
+        <svg class="w-5 h-5 inline" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      </a>
+      <a href="#" aria-label="Instagram" class="hover:text-gray-400 transition">
+        <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+      </a>
+      <a href="#" aria-label="Twitter" class="hover:text-gray-400 transition">
+        <svg class="w-5 h-5 inline" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+      </a>
+      <a href="#" aria-label="LinkedIn" class="hover:text-gray-400 transition">
+        <svg class="w-5 h-5 inline" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="#" aria-label="Pinterest" class="hover:text-gray-400 transition">
+        <svg class="w-5 h-5 inline" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.03-2.83.19-.77 1.27-5.39 1.27-5.39s-.32-.65-.32-1.6c0-1.5.87-2.63 1.95-2.63.92 0 1.37.69 1.37 1.52 0 .93-.59 2.31-.89 3.6-.25 1.07.53 1.94 1.58 1.94 1.9 0 3.18-2.4 3.18-5.23 0-2.15-1.46-3.78-4.12-3.78-3.01 0-4.9 2.25-4.9 4.78 0 .87.25 1.48.64 1.96.18.21.21.29.14.54-.05.17-.15.59-.2.76-.07.25-.27.34-.49.25-1.38-.56-2.02-2.08-2.02-3.78 0-2.81 2.37-6.2 7.06-6.2 3.79 0 6.3 2.75 6.3 5.7 0 3.91-2.17 6.85-5.36 6.85-1.07 0-2.08-.58-2.43-1.23l-.66 2.58c-.24.92-.88 2.06-1.31 2.76.99.3 2.03.46 3.11.46 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+      </a>
+    </div>
+    <!-- Engagement Score -->
+    <div class="flex items-center gap-2 text-sm font-bold tracking-widest uppercase">
+      <span>Engagement Score:</span>
+      <span id="score-display" class="text-white text-base">0</span>
+    </div>
+    <!-- Search -->
+    <div class="relative">
+      <input id="search-bar" type="text" placeholder="Search posts..." class="bg-gray-800 text-white text-sm px-4 py-1.5 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-500 w-48" />
+    </div>
+  </div>
+
+  <!-- ===== NAV ===== -->
+  <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between py-3">
+      <div class="flex gap-8 text-sm font-bold tracking-widest uppercase" id="nav-links">
+        <a href="#posts" data-section="posts" class="hover:text-gray-500 transition">Home</a>
+        <a href="#about" data-section="about" class="hover:text-gray-500 transition">About</a>
+        <a href="#tags" data-section="tags" class="hover:text-gray-500 transition">Tags</a>
+        <a href="#subscribe" data-section="subscribe" class="hover:text-gray-500 transition">Subscribe</a>
+      </div>
+      <button id="menu-toggle" class="md:hidden text-black focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO HEADER ===== -->
+  <header class="text-center py-16 bg-white">
+    <h1 class="text-5xl md:text-6xl font-black tracking-tight uppercase text-black">Jane Bloglife</h1>
+    <p class="mt-3 text-base text-gray-600">Welcome to the blog of <span class="bg-black text-white px-2 py-0.5 font-bold">Jane's world</span></p>
+  </header>
+
+  <!-- ===== HERO IMAGE SECTION ===== -->
+  <div class="relative hero-img h-[520px] flex flex-col justify-end p-10 text-white">
+    <h2 class="text-5xl font-black uppercase tracking-tight drop-shadow-lg">Fashion Blog</h2>
+    <button id="subscribe-btn" class="mt-4 border-2 border-white text-white font-bold uppercase tracking-widest px-6 py-2 w-fit hover:bg-white hover:text-black transition">Subscribe</button>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="max-w-7xl mx-auto px-4 py-10 flex flex-col lg:flex-row gap-10">
+
+    <!-- ===== BLOG POSTS ===== -->
+    <main class="flex-1" id="posts">
+
+      <!-- Post 1 -->
+      <article class="bg-white border border-gray-100 shadow-sm mb-10 rounded-sm overflow-hidden" data-tags="hats fashion" data-title="More Hats">
+        <div class="p-6 text-center border-b border-gray-100">
+          <h3 class="text-2xl font-bold uppercase tracking-wider article-heading">Title Heading</h3>
+          <p class="text-sm text-gray-500 mt-1">Title description, <span class="text-gray-400">May 2, 2016</span></p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1529589510431-fcff6d0e1a29?w=900&q=80" alt="Hat fashion" class="w-full h-72 object-cover" />
+        <div class="p-6">
+          <p class="text-sm leading-relaxed"><strong>More Hats!</strong> I am crazy about hats these days. Some text about this blog entry. Fashion fashion and mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sedtellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>
+          <p class="text-sm leading-relaxed mt-3">Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+          <div class="flex items-center justify-between mt-5">
+            <button class="like-btn flex items-center gap-2 border border-gray-300 px-4 py-1.5 text-sm font-semibold hover:bg-gray-100 transition rounded-sm">
+              👍 Like
+            </button>
+            <button class="replies-btn bg-black text-white px-4 py-1.5 text-sm font-bold tracking-wider uppercase hover:bg-gray-800 transition rounded-sm" data-post="1">
+              Replies <span class="replies-count ml-1 bg-white text-black px-1.5 rounded-sm">1</span>
+            </button>
+          </div>
+          <!-- Comments Section -->
+          <div class="replies-section mt-4 hidden border-t border-gray-100 pt-4">
+            <div class="flex gap-3 mb-3">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&q=80" class="w-10 h-10 rounded-full object-cover" alt="commenter"/>
+              <div>
+                <p class="font-bold text-sm">George <span class="text-gray-400 font-normal text-xs">May 3, 2015, 6:32 PM</span></p>
+                <p class="text-sm text-gray-700">Great blog post! Following</p>
+              </div>
+            </div>
+            <div class="mt-3">
+              <input type="text" placeholder="Leave a comment..." class="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-black rounded-sm"/>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="bg-white border border-gray-100 shadow-sm mb-10 rounded-sm overflow-hidden" data-tags="hats fashion new-york" data-title="Hats for Men">
+        <div class="p-6 text-center border-b border-gray-100">
+          <h3 class="text-2xl font-bold uppercase tracking-wider article-heading">Title Heading</h3>
+          <p class="text-sm text-gray-500 mt-1">Title description, <span class="text-gray-400">April 23, 2016</span></p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=80" alt="Hats for men" class="w-full h-72 object-cover" />
+        <div class="p-6">
+          <p class="text-sm leading-relaxed"><strong>Hats!</strong> The trend this summer is hats for men!</p>
+          <p class="text-sm leading-relaxed mt-3">Some text about this blog entry. Fashion fashion and mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sedtellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>
+          <div class="flex items-center justify-between mt-5">
+            <button class="like-btn flex items-center gap-2 border border-gray-300 px-4 py-1.5 text-sm font-semibold hover:bg-gray-100 transition rounded-sm">
+              👍 Like
+            </button>
+            <button class="replies-btn bg-black text-white px-4 py-1.5 text-sm font-bold tracking-wider uppercase hover:bg-gray-800 transition rounded-sm" data-post="2">
+              Replies <span class="replies-count ml-1 bg-white text-black px-1.5 rounded-sm">2</span>
+            </button>
+          </div>
+          <div class="replies-section mt-4 hidden border-t border-gray-100 pt-4">
+            <div class="flex gap-3 mb-3">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&q=80" class="w-10 h-10 rounded-full object-cover" alt="commenter"/>
+              <div>
+                <p class="font-bold text-sm">Sarah <span class="text-gray-400 font-normal text-xs">April 24, 2016, 10:15 AM</span></p>
+                <p class="text-sm text-gray-700">Love this trend! Where can I buy these?</p>
+              </div>
+            </div>
+            <div class="mt-3">
+              <input type="text" placeholder="Leave a comment..." class="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-black rounded-sm"/>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="bg-white border border-gray-100 shadow-sm mb-10 rounded-sm overflow-hidden" data-tags="fashion new-york trends" data-title="NYC Runway">
+        <div class="p-6 text-center border-b border-gray-100">
+          <h3 class="text-2xl font-bold uppercase tracking-wider article-heading">Title Heading</h3>
+          <p class="text-sm text-gray-500 mt-1">Title description, <span class="text-gray-400">April 7, 2016</span></p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" alt="NYC runway" class="w-full h-72 object-cover" />
+        <div class="p-6">
+          <p class="text-sm leading-relaxed"><strong>Dont miss!</strong> The runway in New York City this weekend is gonna be legendary!</p>
+          <p class="text-sm leading-relaxed mt-3">Some text about this blog entry. Fashion fashion and mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sedtellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>
+          <div class="flex items-center justify-between mt-5">
+            <button class="like-btn flex items-center gap-2 border border-gray-300 px-4 py-1.5 text-sm font-semibold hover:bg-gray-100 transition rounded-sm">
+              👍 Like
+            </button>
+            <button class="replies-btn bg-black text-white px-4 py-1.5 text-sm font-bold tracking-wider uppercase hover:bg-gray-800 transition rounded-sm" data-post="3">
+              Replies <span class="replies-count ml-1 bg-white text-black px-1.5 rounded-sm">3</span>
+            </button>
+          </div>
+          <div class="replies-section mt-4 hidden border-t border-gray-100 pt-4">
+            <div class="flex gap-3 mb-3">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&q=80" class="w-10 h-10 rounded-full object-cover" alt="commenter"/>
+              <div>
+                <p class="font-bold text-sm">Marcus <span class="text-gray-400 font-normal text-xs">April 8, 2016, 2:00 PM</span></p>
+                <p class="text-sm text-gray-700">NYC fashion week is always iconic!</p>
+              </div>
+            </div>
+            <div class="mt-3">
+              <input type="text" placeholder="Leave a comment..." class="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-black rounded-sm"/>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 4 -->
+      <article class="bg-white border border-gray-100 shadow-sm mb-10 rounded-sm overflow-hidden" data-tags="sweaters fashion london" data-title="Sweater Weather">
+        <div class="p-6 text-center border-b border-gray-100">
+          <h3 class="text-2xl font-bold uppercase tracking-wider article-heading">Title Heading</h3>
+          <p class="text-sm text-gray-500 mt-1">Title description, <span class="text-gray-400">March 15, 2016</span></p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=900&q=80" alt="Sweater fashion" class="w-full h-72 object-cover" />
+        <div class="p-6">
+          <p class="text-sm leading-relaxed"><strong>Sweater Weather!</strong> This season's knitwear is absolutely stunning. London fashion week brought us some of the most incredible sweater designs we've seen in years.</p>
+          <p class="text-sm leading-relaxed mt-3">Fashion fashion and mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper.</p>
+          <div class="flex items-center justify-between mt-5">
+            <button class="like-btn flex items-center gap-2 border border-gray-300 px-4 py-1.5 text-sm font-semibold hover:bg-gray-100 transition rounded-sm">
+              👍 Like
+            </button>
+            <button class="replies-btn bg-black text-white px-4 py-1.5 text-sm font-bold tracking-wider uppercase hover:bg-gray-800 transition rounded-sm" data-post="4">
+              Replies <span class="replies-count ml-1 bg-white text-black px-1.5 rounded-sm">0</span>
+            </button>
+          </div>
+          <div class="replies-section mt-4 hidden border-t border-gray-100 pt-4">
+            <div class="mt-3">
+              <input type="text" placeholder="Be the first to comment..." class="w-full border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-black rounded-sm"/>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="hidden text-center py-16 text-gray-400">
+        <p class="text-2xl font-bold">No posts found</p>
+        <p class="text-sm mt-2">Try a different search term or tag.</p>
+      </div>
+
+    </main>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="lg:w-80 space-y-8">
+
+      <!-- About -->
+      <div id="about" class="bg-black text-white p-5">
+        <h4 class="text-lg font-bold mb-3">My Name</h4>
+        <p class="text-sm leading-relaxed text-gray-300">Just me, myself and I, exploring the universe of uknownment. I have a heart of love and a interest of lorem ipsum and mauris neque quam blog. I want to share my world with you.</p>
+      </div>
+
+      <!-- Popular Posts -->
+      <div class="border border-gray-100 shadow-sm">
+        <h4 class="bg-black text-white font-bold p-4 text-base tracking-wide">Popular Posts</h4>
+        <div class="divide-y divide-gray-100">
+          <div class="flex gap-3 p-3 items-center hover:bg-gray-50 cursor-pointer transition">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&q=80" class="w-14 h-14 object-cover rounded-sm" alt="Denim"/>
+            <div>
+              <p class="font-bold text-sm">Denim</p>
+              <p class="text-xs text-gray-400">Sed mattis nunc</p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-3 items-center hover:bg-gray-50 cursor-pointer transition">
+            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=60&h=60&q=80" class="w-14 h-14 object-cover rounded-sm" alt="Sweaters"/>
+            <div>
+              <p class="font-bold text-sm">Sweaters</p>
+              <p class="text-xs text-gray-400">Praes tinci sed</p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-3 items-center hover:bg-gray-50 cursor-pointer transition">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&q=80" class="w-14 h-14 object-cover rounded-sm" alt="Workshop"/>
+            <div>
+              <p class="font-bold text-sm">Workshop</p>
+              <p class="text-xs text-gray-400">Ultricies congue</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ad -->
+      <div class="border border-dashed border-gray-300 text-center py-10 text-gray-400 text-sm font-bold tracking-widest uppercase bg-gray-50">
+        Your AD Here
+      </div>
+
+      <!-- Tags -->
+      <div id="tags" class="border border-gray-100 shadow-sm">
+        <h4 class="bg-black text-white font-bold p-4 text-base tracking-wide">Tags</h4>
+        <div class="p-4 flex flex-wrap gap-2" id="tag-cloud">
+          <button class="tag-btn active border border-black px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="all">Fashion</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="new-york">New York</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="london">London</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="hats">Hats</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="norway">Norway</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="sweaters">Sweaters</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="ideas">Ideas</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="deals">Deals</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="accessories">Accessories</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="news">News</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="trends">Trends</button>
+          <button class="tag-btn border border-gray-300 px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white transition" data-tag="jeans">Jeans</button>
+        </div>
+      </div>
+
+      <!-- Inspiration Gallery -->
+      <div class="border border-gray-100 shadow-sm">
+        <h4 class="bg-black text-white font-bold p-4 text-base tracking-wide">Inspiration</h4>
+        <div class="grid grid-cols-2 gap-1 p-1">
+          <img src="https://images.unsplash.com/photo-1529589510431-fcff6d0e1a29?w=200&h=200&q=80" class="w-full h-28 object-cover" alt="insp1"/>
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&q=80" class="w-full h-28 object-cover" alt="insp2"/>
+          <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=200&h=200&q=80" class="w-full h-28 object-cover" alt="insp3"/>
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&q=80" class="w-full h-28 object-cover" alt="insp4"/>
+        </div>
+      </div>
+
+      <!-- Follow Me -->
+      <div class="border border-gray-100 shadow-sm">
+        <h4 class="bg-black text-white font-bold p-4 text-base tracking-wide">Follow Me</h4>
+        <div class="p-4 flex gap-4 text-2xl">
+          <a href="#" class="hover:text-gray-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="#" class="hover:text-gray-500 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="#" class="hover:text-gray-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </a>
+          <a href="#" class="hover:text-gray-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="#" class="hover:text-gray-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.03-2.83.19-.77 1.27-5.39 1.27-5.39s-.32-.65-.32-1.6c0-1.5.87-2.63 1.95-2.63.92 0 1.37.69 1.37 1.52 0 .93-.59 2.31-.89 3.6-.25 1.07.53 1.94 1.58 1.94 1.9 0 3.18-2.4 3.18-5.23 0-2.15-1.46-3.78-4.12-3.78-3.01 0-4.9 2.25-4.9 4.78 0 .87.25 1.48.64 1.96.18.21.21.29.14.54-.05.17-.15.59-.2.76-.07.25-.27.34-.49.25-1.38-.56-2.02-2.08-2.02-3.78 0-2.81 2.37-6.2 7.06-6.2 3.79 0 6.3 2.75 6.3 5.7 0 3.91-2.17 6.85-5.36 6.85-1.07 0-2.08-.58-2.43-1.23l-.66 2.58c-.24.92-.88 2.06-1.31 2.76.99.3 2.03.46 3.11.46 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Subscribe -->
+      <div id="subscribe" class="border border-gray-100 shadow-sm">
+        <h4 class="bg-black text-white font-bold p-4 text-base tracking-wide">Subscribe</h4>
+        <div class="p-4">
+          <p class="text-sm text-gray-600 mb-3">Enter your e-mail below and get notified on the latest blog posts.</p>
+          <input type="email" placeholder="Your e-mail" id="email-input" class="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-black mb-2"/>
+          <button id="subscribe-submit" class="w-full bg-red-600 text-white font-bold py-2 text-sm uppercase tracking-widest hover:bg-red-700 transition">Subscribe</button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-gray-800 text-white text-center py-6 mt-8">
+    <p class="text-sm">Powered by <a href="#" class="underline hover:text-gray-300 transition">Jane Bloglife</a></p>
+  </footer>
+
+  <!-- ===== BACK TO TOP BUTTON ===== -->
+  <button id="back-to-top" class="hidden-scroll fixed bottom-8 left-8 bg-black text-white font-bold px-5 py-3 text-sm uppercase tracking-widest hover:bg-gray-800 transition shadow-lg z-50 flex items-center gap-2">
+    ↑ To the top
+  </button>
+
+  <!-- ===== PAGE TITLE (for tag renaming) ===== -->
+  <div id="active-tag-banner" class="hidden fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-6 py-2 text-xs font-bold tracking-widest uppercase shadow-lg transition-all">
+    Showing: <span id="active-tag-name">All</span>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // =============================================
+    // GLOBAL STATE
+    // =============================================
+    let score = 0;
+    const scoreDisplay = document.getElementById('score-display');
+
+    // =============================================
+    // FUNCTION: updateScore() — adds 1 to score, updates DOM, turns gold at 10
+    // =============================================
+    function updateScore() {
+      score += 1;
+      scoreDisplay.innerText = score;
+      if (score >= 10) {
+        scoreDisplay.classList.add('score-gold');
+      }
+    }
+
+    // =============================================
+    // A. LIKE BUTTONS — Engagement Score
+    // =============================================
+    const likeButtons = document.querySelectorAll('.like-btn');
+    likeButtons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        updateScore();
+        btn.innerText = '❤️ Liked!';
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+      });
+    });
+
+    // =============================================
+    // B. REPLIES TOGGLE
+    // =============================================
+    const repliesBtns = document.querySelectorAll('.replies-btn');
+    repliesBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const article = btn.closest('article');
+        const section = article.querySelector('.replies-section');
+        section.classList.toggle('hidden');
+      });
+    });
+
+    // =============================================
+    // C. REAL-TIME SEARCH FILTERING
+    // =============================================
+    const searchBar = document.getElementById('search-bar');
+    const allArticles = document.querySelectorAll('article');
+    const noResults = document.getElementById('no-results');
+
+    searchBar.addEventListener('input', function() {
+      const query = searchBar.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      allArticles.forEach(function(article) {
+        const title = article.dataset.title.toLowerCase();
+        const text = article.innerText.toLowerCase();
+        if (title.includes(query) || text.includes(query)) {
+          article.style.display = '';
+          visibleCount++;
+        } else {
+          article.style.display = 'none';
+        }
+      });
+
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+    });
+
+    // =============================================
+    // D. TAG CLOUD FILTERING — changes article headings & filters posts
+    // =============================================
+    const tagButtons = document.querySelectorAll('.tag-btn');
+    const articleHeadings = document.querySelectorAll('.article-heading');
+    const activeTagName = document.getElementById('active-tag-name');
+    const activeTagBanner = document.getElementById('active-tag-banner');
+
+    tagButtons.forEach(function(tagBtn) {
+      tagBtn.addEventListener('click', function() {
+        const selectedTag = tagBtn.dataset.tag;
+        const tagLabel = tagBtn.innerText.trim();
+
+        // Update active state
+        tagButtons.forEach(function(b) {
+          b.classList.remove('active', 'bg-black', 'text-white');
+          b.classList.add('border-gray-300');
+        });
+        tagBtn.classList.add('active');
+
+        // Show banner
+        activeTagName.innerText = tagLabel;
+        activeTagBanner.classList.remove('hidden');
+        setTimeout(function() {
+          activeTagBanner.classList.add('hidden');
+        }, 2500);
+
+        // Filter articles & rename headings
+        let visibleCount = 0;
+        allArticles.forEach(function(article) {
+          const tags = article.dataset.tags;
+          const heading = article.querySelector('.article-heading');
+
+          if (selectedTag === 'all' || tags.includes(selectedTag)) {
+            article.style.display = '';
+            visibleCount++;
+            // Rename heading to reflect tag
+            if (selectedTag !== 'all') {
+              heading.innerText = tagLabel + ' — Featured';
+            } else {
+              heading.innerText = 'Title Heading';
+            }
+          } else {
+            article.style.display = 'none';
+          }
+        });
+
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+        }
+      });
+    });
+
+    // =============================================
+    // E. BACK TO TOP — Appears after scrolling 200px
+    // =============================================
+    const backToTopBtn = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 200) {
+        backToTopBtn.classList.remove('hidden-scroll');
+        backToTopBtn.classList.add('flex');
+      } else {
+        backToTopBtn.classList.add('hidden-scroll');
+        backToTopBtn.classList.remove('flex');
+      }
+    });
+
+    backToTopBtn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // =============================================
+    // F. SMOOTH SCROLL NAV LINKS
+    // =============================================
+    const navLinks = document.querySelectorAll('nav a[data-section]');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const sectionId = link.dataset.section;
+        const target = document.getElementById(sectionId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // =============================================
+    // G. SUBSCRIBE BUTTONS
+    // =============================================
+    const subscribeBtn = document.getElementById('subscribe-btn');
+    subscribeBtn.addEventListener('click', function() {
+      const subscribeSection = document.getElementById('subscribe');
+      subscribeSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    const subscribeSubmit = document.getElementById('subscribe-submit');
+    const emailInput = document.getElementById('email-input');
+    subscribeSubmit.addEventListener('click', function() {
+      if (emailInput.value.includes('@')) {
+        subscribeSubmit.innerText = '✅ Subscribed!';
+        subscribeSubmit.classList.replace('bg-red-600', 'bg-green-600');
+        emailInput.value = '';
+        emailInput.disabled = true;
+        subscribeSubmit.disabled = true;
+      } else {
+        emailInput.classList.add('border-red-500');
+        emailInput.placeholder = 'Please enter a valid email!';
+      }
+    });
+  </script>
+
+</body>
+</html>
